@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import rs.ac.bg.fon.airbnb_backend.domain.User;
+import rs.ac.bg.fon.airbnb_backend.exception.JdbcException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ public class UserRepository implements MyRepository<User, Long>, RowMapper<User>
                 .name(rs.getString("name"))
                 .email(rs.getString("email"))
                 .gender(rs.getString("gender"))
+                .password(rs.getString("password"))
                 .build();
     }
 
@@ -34,5 +36,15 @@ public class UserRepository implements MyRepository<User, Long>, RowMapper<User>
     public User findById(Long id) {
         String sqlQuery = String.format("SELECT * FROM UserInfo WHERE userId = %d", id);
         return jdbcTemplate.queryForObject(sqlQuery, this);
+    }
+
+    public void addNewGender(String newGender) {
+        try {
+            jdbcTemplate.update("EXEC AddNewGender ?", newGender);
+        } catch (Exception e) {
+            throw new JdbcException(e.getMessage(), e);
+        }
+
+
     }
 }

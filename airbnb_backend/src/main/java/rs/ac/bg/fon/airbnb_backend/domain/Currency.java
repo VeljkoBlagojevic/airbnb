@@ -7,5 +7,5 @@ import lombok.Data;
 @Builder
 public class Currency {
     private Long currencyId;
-    private String currencyName;
+    private String name;
 }

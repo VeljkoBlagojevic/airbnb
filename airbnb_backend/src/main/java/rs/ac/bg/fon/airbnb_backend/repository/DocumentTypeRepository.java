@@ -36,5 +36,4 @@ public class DocumentTypeRepository implements MyRepository<DocumentType, Long>,
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
 
-
 }

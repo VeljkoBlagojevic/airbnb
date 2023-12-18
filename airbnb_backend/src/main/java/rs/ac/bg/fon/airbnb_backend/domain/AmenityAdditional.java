@@ -5,10 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Amenity {
+public class AmenityAdditional {
     private Long amenityId;
-    private String name;
     private String description;
-    private AmenityCategory amenityCategory;
-    private String categoryName;
+    private Long categoryId;
 }

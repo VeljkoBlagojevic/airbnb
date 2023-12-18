@@ -38,7 +38,8 @@ public class CreditCardRepository implements MyRepository<CreditCard, String>, R
         String sqlQuery = """
                 SELECT card.creditCardNumber.ToString() AS cardNumber, card.expiryDate, card.name, owner.userId AS userId, owner.name AS userName, owner.email, owner.gender
                 FROM CreditCard card
-                JOIN UserInfo owner ON card.userId = owner.userId""";
+                JOIN UserInfo owner
+                    ON card.userId = owner.userId""";
         return jdbcTemplate.query(sqlQuery, this);
     }
 
@@ -47,8 +48,17 @@ public class CreditCardRepository implements MyRepository<CreditCard, String>, R
         String sqlQuery = """
                 SELECT card.creditCardNumber.ToString() AS cardNumber, card.expiryDate, card.name, owner.userId AS userId, owner.name AS userName, owner.email, owner.gender
                 FROM CreditCard card
-                JOIN UserInfo owner ON card.userId = owner.userId
+                JOIN UserInfo owner
+                    ON card.userId = owner.userId
                 WHERE creditCardNumber = %s""".formatted(creditCardNumber);
         return jdbcTemplate.queryForObject(sqlQuery, this);
+    }
+
+    public List<CreditCard> findAllExpiringInYear(Integer year) {
+        String sqlQuery = """
+                SELECT $PARTITION.DATE_PARTITION_FUNCTION(expiryDate) AS partition, *
+                FROM CreditCard
+                WHERE partition = 2022 + %d""".formatted(year);
+        return jdbcTemplate.query(sqlQuery, this);
     }
 }

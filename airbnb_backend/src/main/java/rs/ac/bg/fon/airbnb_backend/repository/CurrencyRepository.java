@@ -20,7 +20,7 @@ public class CurrencyRepository implements MyRepository<Currency, Long>, RowMapp
     public Currency mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Currency.builder()
                 .currencyId(rs.getLong("currencyId"))
-                .currencyName(rs.getString("currencyName"))
+                .name(rs.getString("name"))
                 .build();
     }
 
