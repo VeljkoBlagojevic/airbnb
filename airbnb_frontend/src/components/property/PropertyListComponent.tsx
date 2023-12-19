@@ -37,6 +37,7 @@ const PropertyListComponent = () => {
   const [isModalEdit, setModalEdit] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [propertyName, setPropertyName] = useState<string>("");
+  const [categoryName, setCategoryName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
   const [currency, setCurrency] = useState<Currency>(defaultCurrency);
   const [location, setLocation] = useState<Location>(defaultLocation);
@@ -184,6 +185,30 @@ const PropertyListComponent = () => {
     }
   };
 
+  const handleUpdateWithCategoryName = async () => {
+    const property: Property = {
+      propertyId,
+      name: propertyName,
+      location,
+      currency,
+      category,
+      price,
+      categoryName,
+    };
+    try {
+      await axios.patch(
+        `${API_BASE_URL}properties/${property.propertyId}/withCategoryName`,
+        property
+      );
+      fetchData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      emptyProperty();
+      setModalOpen(false);
+    }
+  };
+
   const handleInsert = async () => {
     const property: Property = {
       propertyId: 1,
@@ -206,6 +231,28 @@ const PropertyListComponent = () => {
     }
   };
 
+  const handleInsertWithCategoryName = async () => {
+    const property: Property = {
+      propertyId: 1,
+      name: propertyName,
+      location,
+      currency,
+      category,
+      price,
+      categoryName,
+    };
+    try {
+      await axios.post(`${API_BASE_URL}properties/withCategoryName`, property);
+      fetchData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      emptyProperty();
+      setModalOpen(false);
+      fetchData();
+    }
+  };
+
   const handleDelete = async (property: Property) => {
     try {
       await axios.delete(`${API_BASE_URL}properties/${property.propertyId}`);
@@ -217,6 +264,12 @@ const PropertyListComponent = () => {
 
   const handleConfirm = () => {
     isModalEdit ? handleUpdate() : handleInsert();
+  };
+
+  const handleConfirmWithCategoryName = () => {
+    isModalEdit
+      ? handleUpdateWithCategoryName()
+      : handleInsertWithCategoryName();
   };
 
   const setModalInfo = (propertyToEdit: Property) => {
@@ -292,6 +345,12 @@ const PropertyListComponent = () => {
                 </MenuItem>
               ))}
             </Select>
+
+            <TextField
+              label="Category Name"
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setModalOpen(false)} color="primary">
@@ -299,6 +358,11 @@ const PropertyListComponent = () => {
             </Button>
             <Button onClick={handleConfirm} color="primary">
               {isModalEdit ? "Update" : "Insert"}
+            </Button>
+            <Button onClick={handleConfirmWithCategoryName} color="primary">
+              {isModalEdit
+                ? "Update With Category Name"
+                : "Insert With Category Name"}
             </Button>
           </DialogActions>
         </Dialog>

@@ -56,6 +56,7 @@ public class AmenityRepository implements MyRepository<Amenity, Long>, RowMapper
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
 
+    @Override
     public void save(Amenity amenity) {
         String sqlQuery = """
                 INSERT INTO Amenity_View(amenityId, name, description, amenityCategoryId)
@@ -67,6 +68,7 @@ public class AmenityRepository implements MyRepository<Amenity, Long>, RowMapper
         jdbcTemplate.update(sqlQuery);
     }
 
+    @Override
     public void delete(Long basicId) {
         String sqlQuery = """
                 DELETE FROM Amenity_View

@@ -34,4 +34,14 @@ public class AmenityCategoryRepository implements MyRepository<AmenityCategory, 
         String sqlQuery = String.format("SELECT * FROM AmenityCategory WHERE amenityCategoryId = %d", categoryId);
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
+
+    @Override
+    public void save(AmenityCategory value) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

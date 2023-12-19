@@ -41,4 +41,14 @@ public class AmenityBasicRepository implements MyRepository<AmenityBasic, Long>,
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
 
+    @Override
+    public void save(AmenityBasic value) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
 }

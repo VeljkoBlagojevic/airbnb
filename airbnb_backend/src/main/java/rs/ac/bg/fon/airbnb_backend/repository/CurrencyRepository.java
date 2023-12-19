@@ -34,4 +34,14 @@ public class CurrencyRepository implements MyRepository<Currency, Long>, RowMapp
         String sqlQuery = String.format("SELECT * FROM Currency WHERE currencyId = %d", id);
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
+
+    @Override
+    public void save(Currency value) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

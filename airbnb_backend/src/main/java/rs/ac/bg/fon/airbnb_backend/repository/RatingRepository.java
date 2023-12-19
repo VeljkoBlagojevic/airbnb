@@ -54,4 +54,14 @@ public class RatingRepository implements MyRepository<Rating, RatingId>, RowMapp
                 .formatted(id.getReviewId(), id.getReviewCategoryId());
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
+
+    @Override
+    public void save(Rating value) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(RatingId ratingId) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

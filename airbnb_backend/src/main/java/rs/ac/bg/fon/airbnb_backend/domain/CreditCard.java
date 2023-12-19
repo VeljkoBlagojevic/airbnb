@@ -1,5 +1,6 @@
 package rs.ac.bg.fon.airbnb_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,4 +13,6 @@ public class CreditCard {
     private User user;
     private LocalDate expiryDate;
     private String name;
+    @JsonIgnore
+    private Integer partition;
 }

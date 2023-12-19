@@ -40,6 +40,11 @@ public class PropertyController {
         propertyRepository.save(property);
     }
 
+    @PostMapping("/withCategoryName")
+    public void saveWithCategoryName(@RequestBody Property property) {
+        propertyRepository.saveWithCategoryName(property);
+    }
+
     @DeleteMapping("{propertyId}")
     public void delete(@PathVariable Long propertyId) {
         propertyRepository.delete(propertyId);
@@ -48,6 +53,11 @@ public class PropertyController {
     @PatchMapping("{propertyId}")
     public void update(@PathVariable Long propertyId, @RequestBody Property property) {
         propertyRepository.update(propertyId, property);
+    }
+
+    @PatchMapping("{propertyId}/withCategoryName")
+    public void updateWithCategoryName(@PathVariable Long propertyId, @RequestBody Property property) {
+        propertyRepository.updateWithCategoryName(propertyId, property);
     }
 
 }

@@ -41,4 +41,14 @@ public class AmenityAdditionalRepository implements MyRepository<AmenityAddition
                 WHERE amenityId = %d""".formatted(amenityId);
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
+
+    @Override
+    public void save(AmenityAdditional value) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

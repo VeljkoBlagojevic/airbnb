@@ -36,4 +36,14 @@ public class DocumentTypeRepository implements MyRepository<DocumentType, Long>,
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
 
+    @Override
+    public void save(DocumentType value) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
 }

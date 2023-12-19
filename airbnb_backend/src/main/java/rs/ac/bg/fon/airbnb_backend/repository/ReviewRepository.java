@@ -36,4 +36,14 @@ public class ReviewRepository implements MyRepository<Review, Long>, RowMapper<R
         String sqlQuery = String.format("SELECT * FROM Review WHERE reviewId = %d", id);
         return jdbcTemplate.queryForObject(sqlQuery, this);
     }
+
+    @Override
+    public void save(Review value) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

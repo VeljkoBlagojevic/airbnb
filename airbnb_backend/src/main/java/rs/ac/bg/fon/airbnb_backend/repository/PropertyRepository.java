@@ -121,6 +121,7 @@ public class PropertyRepository implements MyRepository<Property, Long>, RowMapp
         return jdbcTemplate.query(sqlQuery, this);
     }
 
+    @Override
     public void save(Property property) {
         String sqlQuery = """
                 INSERT INTO Property
@@ -140,6 +141,7 @@ public class PropertyRepository implements MyRepository<Property, Long>, RowMapp
         }
     }
 
+    @Override
     public void delete(Long propertyId) {
         String sqlQuery = """
                 DELETE FROM Property
@@ -163,6 +165,46 @@ public class PropertyRepository implements MyRepository<Property, Long>, RowMapp
                         newProperty.getCategory().getPropertyCategoryId(),
                         newProperty.getCurrency().getCurrencyId(),
                         newProperty.getLocation().getLocationId(),
+                        oldPropertyId);
+        try {
+            jdbcTemplate.update(sqlQuery);
+        } catch (Exception e) {
+            throw new JdbcException(e.getMessage(), e);
+        }
+    }
+
+    public void saveWithCategoryName(Property property) {
+        String sqlQuery = """
+                INSERT INTO Property
+                    (name, price, propertyCategoryId, currencyId, locationId, areaId, hostId, categoryName)
+                    VALUES ('%s',%f,%d,%d,%d,%d,%d)"""
+                .formatted(
+                        property.getName(),
+                        property.getPrice(),
+                        property.getCategory().getPropertyCategoryId(),
+                        property.getCurrency().getCurrencyId(),
+                        property.getLocation().getLocationId(),
+                        1, 1,
+                        property.getCategoryName());
+        try {
+            jdbcTemplate.update(sqlQuery);
+        } catch (Exception e) {
+            throw new JdbcException(e.getMessage(), e);
+        }
+    }
+
+    public void updateWithCategoryName(Long oldPropertyId, Property newProperty) {
+        String sqlQuery = """
+                UPDATE Property
+                SET name = '%s', price = %f, propertyCategoryId = %d, currencyId = %d, locationId = %d, categoryName = '%s'
+                WHERE propertyId = %d"""
+                .formatted(
+                        newProperty.getName(),
+                        newProperty.getPrice(),
+                        newProperty.getCategory().getPropertyCategoryId(),
+                        newProperty.getCurrency().getCurrencyId(),
+                        newProperty.getLocation().getLocationId(),
+                        newProperty.getCategoryName(),
                         oldPropertyId);
         try {
             jdbcTemplate.update(sqlQuery);

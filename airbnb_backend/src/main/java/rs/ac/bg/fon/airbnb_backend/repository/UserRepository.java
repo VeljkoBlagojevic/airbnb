@@ -20,10 +20,10 @@ public class UserRepository implements MyRepository<User, Long>, RowMapper<User>
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         return User.builder()
+                .userId(rs.getLong("userId"))
                 .name(rs.getString("name"))
                 .email(rs.getString("email"))
                 .gender(rs.getString("gender"))
-                .password(rs.getString("password"))
                 .build();
     }
 
@@ -44,7 +44,47 @@ public class UserRepository implements MyRepository<User, Long>, RowMapper<User>
         } catch (Exception e) {
             throw new JdbcException(e.getMessage(), e);
         }
+    }
 
+    @Override
+    public void save(User user) {
+        String sqlQuery = """
+                INSERT INTO UserInfo(name, residenceId, email, gender)
+                VALUES ('%s', %d, '%s', '%s')"""
+                .formatted(user.getName(), 1, user.getEmail(), user.getGender());
+        try {
+            jdbcTemplate.update(sqlQuery);
+        } catch (Exception e) {
+            throw new JdbcException(e.getMessage(), e);
+        }
+    }
 
+    @Override
+    public void delete(Long userId) {
+        String sqlQuery = """
+                DELETE FROM UserInfo
+                WHERE userId = %d""".formatted(userId);
+        try {
+            jdbcTemplate.update(sqlQuery);
+        } catch (Exception e) {
+            throw new JdbcException(e.getMessage(), e);
+        }
+    }
+
+    public void update(Long userId, User user) {
+        String sqlQuery = """
+                UPDATE UserInfo
+                SET name = '%s', email = '%s', gender = '%s'
+                WHERE userId = %d"""
+                .formatted(
+                        user.getName(),
+                        user.getEmail(),
+                        user.getGender(),
+                        userId);
+        try {
+            jdbcTemplate.update(sqlQuery);
+        } catch (Exception e) {
+            throw new JdbcException(e.getMessage(), e);
+        }
     }
 }

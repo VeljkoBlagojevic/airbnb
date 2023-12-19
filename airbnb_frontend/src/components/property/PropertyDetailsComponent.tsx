@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { useParams } from "react-router";
 import { Property } from "../../domain/Property";
-import LocationComponent from "../location/LocationComponent";
 import axios from "axios";
 import { API_BASE_URL } from "../../api/apiConstants";
+import LocationComponent from "./LocationComponent";
 
 const PropertyDetailsComponent = () => {
   const { propertyId } = useParams();
