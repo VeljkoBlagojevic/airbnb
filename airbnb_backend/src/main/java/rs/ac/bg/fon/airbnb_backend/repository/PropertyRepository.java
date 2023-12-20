@@ -154,6 +154,7 @@ public class PropertyRepository implements MyRepository<Property, Long>, RowMapp
         }
     }
 
+    @Override
     public void update(Long oldPropertyId, Property newProperty) {
         String sqlQuery = """
                 UPDATE Property

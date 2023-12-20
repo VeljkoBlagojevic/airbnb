@@ -22,6 +22,9 @@ const NavbarComponent: FC = () => {
         <Link to="/creditCards">
           <Button className="btn-navbar">Credit Cards</Button>
         </Link>
+        <Link to="/reviews">
+          <Button className="btn-navbar">Reviews</Button>
+        </Link>
       </div>
     </div>
   );

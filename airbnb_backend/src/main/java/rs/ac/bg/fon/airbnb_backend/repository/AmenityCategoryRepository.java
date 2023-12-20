@@ -44,4 +44,9 @@ public class AmenityCategoryRepository implements MyRepository<AmenityCategory, 
     public void delete(Long aLong) {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public void update(Long oldId, AmenityCategory newValue) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

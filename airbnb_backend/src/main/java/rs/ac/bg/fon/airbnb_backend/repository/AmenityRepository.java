@@ -80,6 +80,7 @@ public class AmenityRepository implements MyRepository<Amenity, Long>, RowMapper
         }
     }
 
+    @Override
     public void update(Long oldAmenityId, Amenity newAmenity) {
         String sqlQuery = """
                 UPDATE Amenity_View

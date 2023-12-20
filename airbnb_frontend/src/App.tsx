@@ -7,13 +7,15 @@ import CreditCardComponent from "./components/user/CreditCardComponent";
 import UserComponent from "./components/user/UserComponent";
 import PropertyCategoryComponent from "./components/property/PropertyCategoryComponent";
 import NavbarComponent from "./navbar/NavbarComponent";
+import ReviewComponent from "./components/review/ReviewComponent";
+import RatingComponent from "./components/review/RatingComponent";
 
 function App() {
   return (
     <Router>
       <div className="App">
         <div className="body">
-          <NavbarComponent/>
+          <NavbarComponent />
           <Routes>
             <Route path="/" element={<PropertyListComponent />} />
             <Route path="properties" element={<PropertyListComponent />} />
@@ -28,6 +30,11 @@ function App() {
             <Route path="amenities" element={<AmenityComponent />} />
             <Route path="creditCards" element={<CreditCardComponent />} />
             <Route path="users" element={<UserComponent />} />
+            <Route path="reviews" element={<ReviewComponent />} />
+            <Route
+              path="reviews/:reviewId/ratings"
+              element={<RatingComponent />}
+            />
           </Routes>
         </div>
       </div>

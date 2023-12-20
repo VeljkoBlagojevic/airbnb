@@ -10,4 +10,5 @@ public interface MyRepository<T, ID> {
     T findById(ID id);
     void save(T value);
     void delete(ID id);
+    void update(ID oldId, T newValue);
 }

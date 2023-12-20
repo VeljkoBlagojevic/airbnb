@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import rs.ac.bg.fon.airbnb_backend.domain.CreditCard;
 import rs.ac.bg.fon.airbnb_backend.domain.User;
 import rs.ac.bg.fon.airbnb_backend.exception.JdbcException;
@@ -119,6 +118,7 @@ public class CreditCardRepository implements MyRepository<CreditCard, String>, R
         }
     }
 
+    @Override
     public void update(String creditCardNumber, CreditCard creditCard) {
         String sqlQuery = """
                 UPDATE CreditCard
@@ -152,9 +152,9 @@ public class CreditCardRepository implements MyRepository<CreditCard, String>, R
         }
     }
 
-    public List<Integer> getExpiryYears() {
+    public List<Integer> findAllPartitions() {
         String sqlQuery = """
-                SELECT DISTINCT $PARTITION.DATE_PARTITION_FUNCTION(expiryDate) + 2022 AS partition
+                SELECT DISTINCT $PARTITION.DATE_PARTITION_FUNCTION(expiryDate) AS partition
                 FROM CreditCard""";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> rs.getInt("partition"));
     }
@@ -165,7 +165,7 @@ public class CreditCardRepository implements MyRepository<CreditCard, String>, R
                     card.creditCardNumber.ToString() AS cardNumber, card.expiryDate, card.name,
                     owner.userId AS userId, owner.name AS userName, owner.email, owner.gender
                 FROM CreditCard card
-                JOIN UserInfo owner
+                JOIN UserInfo ownerve
                     ON owner.userId = card.userId""";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {

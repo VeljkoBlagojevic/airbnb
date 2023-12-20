@@ -8,9 +8,7 @@ import lombok.Data;
 @Builder
 public class Rating {
     private RatingId ratingId;
-//    private Long reviewId;
     private Short value;
-//    private Review review;
     private ReviewCategory category;
 
 

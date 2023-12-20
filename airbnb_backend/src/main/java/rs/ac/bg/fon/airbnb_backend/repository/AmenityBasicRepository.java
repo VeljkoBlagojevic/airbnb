@@ -51,4 +51,8 @@ public class AmenityBasicRepository implements MyRepository<AmenityBasic, Long>,
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
+    public void update(Long oldId, AmenityBasic newValue) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

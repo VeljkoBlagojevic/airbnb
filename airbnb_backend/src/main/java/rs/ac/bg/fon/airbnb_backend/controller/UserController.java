@@ -37,7 +37,6 @@ public class UserController {
 
     @PostMapping("/newGender/{newGender}")
     public void addNewGender(@PathVariable String newGender) {
-        System.out.println(newGender);
         userRepository.addNewGender(newGender);
     }
 }

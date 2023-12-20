@@ -71,6 +71,7 @@ public class UserRepository implements MyRepository<User, Long>, RowMapper<User>
         }
     }
 
+    @Override
     public void update(Long userId, User user) {
         String sqlQuery = """
                 UPDATE UserInfo

@@ -51,4 +51,9 @@ public class AmenityAdditionalRepository implements MyRepository<AmenityAddition
     public void delete(Long aLong) {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public void update(Long oldId, AmenityAdditional newValue) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

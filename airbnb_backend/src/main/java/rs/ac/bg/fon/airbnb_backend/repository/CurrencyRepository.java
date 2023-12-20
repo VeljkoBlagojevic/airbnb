@@ -44,4 +44,9 @@ public class CurrencyRepository implements MyRepository<Currency, Long>, RowMapp
     public void delete(Long aLong) {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public void update(Long oldId, Currency newValue) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

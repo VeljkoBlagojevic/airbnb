@@ -48,4 +48,9 @@ public class LocationRepository implements MyRepository<Location, Long>, RowMapp
     public void delete(Long aLong) {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public void update(Long oldId, Location newValue) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

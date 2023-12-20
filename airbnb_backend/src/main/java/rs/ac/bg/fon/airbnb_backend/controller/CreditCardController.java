@@ -46,9 +46,9 @@ public class CreditCardController {
         creditCardRepository.updateWithUserName(creditCardNumber, creditCard);
     }
 
-    @GetMapping("expiryYears")
+    @GetMapping("partitions/simple")
     public List<Integer> getExpiryYears() {
-        return creditCardRepository.getExpiryYears();
+        return creditCardRepository.findAllPartitions();
     }
 
     @GetMapping("partitions")

@@ -61,6 +61,7 @@ public class PropertyCategoryRepository implements MyRepository<PropertyCategory
         }
     }
 
+    @Override
     public void update(Long propertyCategoryId, PropertyCategory category) {
         String sqlQuery = """
                 UPDATE PropertyCategory
