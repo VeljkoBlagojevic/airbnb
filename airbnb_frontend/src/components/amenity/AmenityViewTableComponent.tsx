@@ -7,7 +7,8 @@ const AmenityViewTableComponent: FC<{
   data: Amenity[];
   handleDelete: Function;
   openDialogForEdit: Function;
-}> = ({ data, handleDelete, openDialogForEdit }) => {
+  header: string;
+}> = ({ data, handleDelete, openDialogForEdit, header }) => {
   const columns = [
     { field: "amenityId", headerName: "Amenity ID", flex: 1 },
     { field: "name", headerName: "Name", flex: 1 },
@@ -23,8 +24,7 @@ const AmenityViewTableComponent: FC<{
       field: "amenityCategory.name",
       headerName: "Category Name",
       flex: 1,
-      valueGetter: (params: any) =>
-        params.row.amenityCategory.name,
+      valueGetter: (params: any) => params.row.amenityCategory.name,
     },
     {
       field: "delete",
@@ -46,6 +46,7 @@ const AmenityViewTableComponent: FC<{
 
   return (
     <div style={{ height: 400, width: "100%" }}>
+      <h1>{header}</h1>
       <DataGrid
         rows={data}
         columns={columns}

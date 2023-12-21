@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
+import { Alert, Snackbar, TextField } from "@mui/material";
 import { useParams } from "react-router";
 import { Property } from "../../domain/Property";
 import axios from "axios";
@@ -9,6 +9,13 @@ import LocationComponent from "./LocationComponent";
 const PropertyDetailsComponent = () => {
   const { propertyId } = useParams();
   const [property, setProperty] = useState<Property>();
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
+  };
 
   useEffect(() => {
     const fetchPropertyDetails = async () => {
@@ -17,7 +24,9 @@ const PropertyDetailsComponent = () => {
           `${API_BASE_URL}properties/${propertyId}`
         );
         setProperty(response.data);
-      } catch (error) {
+      } catch (error: any) {
+        setErrorMessage(error.response.data.body.detail);
+        setOpenSnackbar(true);
         console.error(error);
       }
     };
@@ -48,6 +57,19 @@ const PropertyDetailsComponent = () => {
             type="text"
             value={property.categoryName}
           />
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              <strong>Error:</strong> {errorMessage}
+            </Alert>
+          </Snackbar>
         </>
       )}
     </>

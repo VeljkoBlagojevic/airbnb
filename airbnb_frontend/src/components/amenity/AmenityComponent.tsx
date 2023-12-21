@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Container,
   Dialog,
@@ -8,6 +9,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import AmenityBasicTableComponent from "./AmenityBasicTableComponent";
@@ -42,6 +44,14 @@ const AmenityComponent = () => {
   // false for saving inserting, true for updating
   const [isModalEdit, setModalEdit] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
+  };
+
   const emptyAmenity = () => {
     updateNextId();
     setAmenityName("");
@@ -61,7 +71,9 @@ const AmenityComponent = () => {
       fetchView();
       fetchBasic();
       fetchAdditional();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       emptyAmenity();
@@ -75,7 +87,9 @@ const AmenityComponent = () => {
         `${API_BASE_URL}amenities/view`
       );
       setViewData(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -86,7 +100,9 @@ const AmenityComponent = () => {
         `${API_BASE_URL}amenities/basic`
       );
       setBasicData(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -97,7 +113,9 @@ const AmenityComponent = () => {
         `${API_BASE_URL}amenities/additional`
       );
       setAdditionalData(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -108,7 +126,9 @@ const AmenityComponent = () => {
         `${API_BASE_URL}amenityCategories`
       );
       setAmenityCategories(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -156,7 +176,9 @@ const AmenityComponent = () => {
       fetchView();
       fetchBasic();
       fetchAdditional();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       emptyAmenity();
@@ -170,7 +192,9 @@ const AmenityComponent = () => {
       fetchView();
       fetchBasic();
       fetchAdditional();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -237,13 +261,27 @@ const AmenityComponent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <AmenityBasicTableComponent data={basicData} />
-      <AmenityAdditionalTableComponent data={additionalData} />
+      <AmenityBasicTableComponent data={basicData} header="Basic" />
+      <AmenityAdditionalTableComponent data={additionalData} header="Additional" />
       <AmenityViewTableComponent
         data={viewData}
+        header="Combined View Full"
         handleDelete={handleDelete}
         openDialogForEdit={openDialogForEdit}
       />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <strong>Error:</strong> {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

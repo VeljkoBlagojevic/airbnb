@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Container,
   Dialog,
@@ -6,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import UserTableComponent from "./UserTableComponent";
@@ -26,6 +28,14 @@ const UserComponent = () => {
   // false for saving inserting, true for updating
   const [isModalEdit, setModalEdit] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
+  };
+
   const emptyUser = () => {
     setUserId(0);
     setUserName("");
@@ -42,7 +52,9 @@ const UserComponent = () => {
     };
     try {
       await axios.post(`${API_BASE_URL}users`, user);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchUsers();
@@ -55,7 +67,9 @@ const UserComponent = () => {
     try {
       const response = await axios.get<User[]>(`${API_BASE_URL}users`);
       setUsers(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -87,7 +101,9 @@ const UserComponent = () => {
     };
     try {
       await axios.patch(`${API_BASE_URL}users/${user.userId}`, user);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchUsers();
@@ -100,7 +116,9 @@ const UserComponent = () => {
     try {
       await axios.delete(`${API_BASE_URL}users/${user.userId}`);
       fetchUsers();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -116,7 +134,9 @@ const UserComponent = () => {
   const addNewGender = async () => {
     try {
       await axios.post(`${API_BASE_URL}users/newGender/${newGender}`);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -182,6 +202,19 @@ const UserComponent = () => {
         />
         <Button onClick={addNewGender}>ADD NEW GENDER</Button>
       </FormControl>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <strong>Error:</strong> {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

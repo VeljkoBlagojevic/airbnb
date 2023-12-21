@@ -1,7 +1,6 @@
-import { Card, CardHeader, Container, TextField } from "@mui/material";
+import { Container, TextField } from "@mui/material";
 import { Review } from "../../domain/Review";
 import { FC } from "react";
-import { Title } from "@mui/icons-material";
 
 const ReviewCardComponent: FC<{
   review: Review;

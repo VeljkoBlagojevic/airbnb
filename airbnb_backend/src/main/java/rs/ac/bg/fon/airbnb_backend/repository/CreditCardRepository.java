@@ -165,7 +165,7 @@ public class CreditCardRepository implements MyRepository<CreditCard, String>, R
                     card.creditCardNumber.ToString() AS cardNumber, card.expiryDate, card.name,
                     owner.userId AS userId, owner.name AS userName, owner.email, owner.gender
                 FROM CreditCard card
-                JOIN UserInfo ownerve
+                JOIN UserInfo owner
                     ON owner.userId = card.userId""";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {

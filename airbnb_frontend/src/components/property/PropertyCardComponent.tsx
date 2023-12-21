@@ -19,6 +19,10 @@ const PropertyCardComponent: FC<{
           disabled
           value={`${property.location.city}, ${property.location.country}`}
         />
+        <TextField
+          disabled
+          value={`${property.categoryName}`}
+        />
         <Button onClick={() => navigate(`/properties/${property.propertyId}`)}>
           See details
         </Button>

@@ -2,6 +2,7 @@ import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import PropertyCardComponent from "./PropertyCardComponent";
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -13,6 +14,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import { Property } from "../../domain/Property";
@@ -46,6 +48,14 @@ const PropertyListComponent = () => {
   );
   const [propertyId, setPropertyId] = useState<number>(5);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
+  };
+
   const fetchData = async () => {
     try {
       const url = `http://localhost:8080/api/v1/properties/${searchParam}`;
@@ -57,7 +67,9 @@ const PropertyListComponent = () => {
         },
       });
       setProperties(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error(error);
     }
   };
@@ -68,7 +80,9 @@ const PropertyListComponent = () => {
 
       const response = await axios.get<Currency[]>(url);
       setCurrencies(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error(error);
     }
   };
@@ -78,7 +92,9 @@ const PropertyListComponent = () => {
       const url = `http://localhost:8080/api/v1/propertyCategories`;
       const response = await axios.get<PropertyCategory[]>(url);
       setPropertyCategories(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error(error);
     }
   };
@@ -88,7 +104,9 @@ const PropertyListComponent = () => {
       const url = `http://localhost:8080/api/v1/locations`;
       const response = await axios.get<Location[]>(url);
       setLocations(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error(error);
     }
   };
@@ -177,7 +195,9 @@ const PropertyListComponent = () => {
         property
       );
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       emptyProperty();
@@ -201,7 +221,9 @@ const PropertyListComponent = () => {
         property
       );
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       emptyProperty();
@@ -222,7 +244,9 @@ const PropertyListComponent = () => {
     try {
       await axios.post(`${API_BASE_URL}properties`, property);
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       emptyProperty();
@@ -244,7 +268,9 @@ const PropertyListComponent = () => {
     try {
       await axios.post(`${API_BASE_URL}properties/withCategoryName`, property);
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       emptyProperty();
@@ -257,7 +283,9 @@ const PropertyListComponent = () => {
     try {
       await axios.delete(`${API_BASE_URL}properties/${property.propertyId}`);
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -403,6 +431,19 @@ const PropertyListComponent = () => {
             />
           ))}
       </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <strong>Error:</strong> {errorMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

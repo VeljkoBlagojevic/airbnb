@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Container,
   Dialog,
@@ -9,6 +10,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import CreditCardTableComponent from "./CreditCardTableComponent";
@@ -35,6 +37,14 @@ const CreditCardComponent = () => {
   // false for saving inserting, true for updating
   const [isModalEdit, setModalEdit] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
+  };
+
   const emptyCreditCard = () => {
     setCreditCardNumber("");
     setCreditCardName("");
@@ -46,7 +56,9 @@ const CreditCardComponent = () => {
         `${API_BASE_URL}creditCards/partitions`
       );
       setPartitions(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -60,7 +72,9 @@ const CreditCardComponent = () => {
     };
     try {
       await axios.post(`${API_BASE_URL}creditCards`, creditCard);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -79,7 +93,9 @@ const CreditCardComponent = () => {
     };
     try {
       await axios.post(`${API_BASE_URL}creditCards/withUserName`, creditCard);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -95,7 +111,9 @@ const CreditCardComponent = () => {
         `${API_BASE_URL}creditCards`
       );
       setData(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -104,7 +122,9 @@ const CreditCardComponent = () => {
     try {
       const response = await axios.get<User[]>(`${API_BASE_URL}users`);
       setUsers(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -141,7 +161,9 @@ const CreditCardComponent = () => {
         `${API_BASE_URL}creditCards/${creditCard.creditCardNumber}`,
         creditCard
       );
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -163,7 +185,9 @@ const CreditCardComponent = () => {
         `${API_BASE_URL}creditCards/${creditCard.creditCardNumber}/withUserName`,
         creditCard
       );
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -178,7 +202,9 @@ const CreditCardComponent = () => {
       await axios.delete(
         `${API_BASE_URL}creditCards/${creditCard.creditCardNumber}`
       );
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
     fetchData();
@@ -283,6 +309,19 @@ const CreditCardComponent = () => {
           header={partition}
         />
       ))}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <strong>Error:</strong> {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

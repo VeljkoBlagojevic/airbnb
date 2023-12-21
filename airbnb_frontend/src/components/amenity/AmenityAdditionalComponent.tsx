@@ -2,8 +2,8 @@ import { FC } from "react";
 import { AmenityAdditional } from "../../domain/AmenityAdditional";
 import { DataGrid } from "@mui/x-data-grid";
 
-const AmenityAdditionalTableComponent: FC<{ data: AmenityAdditional[] }> = ({
-  data,
+const AmenityAdditionalTableComponent: FC<{ data: AmenityAdditional[], header: string }> = ({
+  data, header
 }) => {
   const columns = [
     { field: "amenityId", headerName: "Amenity ID", flex: 1 },
@@ -13,6 +13,7 @@ const AmenityAdditionalTableComponent: FC<{ data: AmenityAdditional[] }> = ({
 
   return (
     <div style={{ height: 400, width: "100%" }}>
+      <h1>{header}</h1>
       <DataGrid
         rows={data}
         columns={columns}

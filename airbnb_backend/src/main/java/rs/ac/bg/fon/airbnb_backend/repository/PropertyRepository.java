@@ -178,7 +178,7 @@ public class PropertyRepository implements MyRepository<Property, Long>, RowMapp
         String sqlQuery = """
                 INSERT INTO Property
                     (name, price, propertyCategoryId, currencyId, locationId, areaId, hostId, categoryName)
-                    VALUES ('%s',%f,%d,%d,%d,%d,%d)"""
+                    VALUES ('%s',%f,%d,%d,%d,%d,%d,'%s')"""
                 .formatted(
                         property.getName(),
                         property.getPrice(),

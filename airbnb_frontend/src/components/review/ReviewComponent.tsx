@@ -1,10 +1,12 @@
 import {
+  Alert,
   Button,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import ReviewTableComponent from "./ReviewTableComponent";
@@ -23,6 +25,14 @@ const ReviewComponent = () => {
   // false for saving inserting, true for updating
   const [isModalEdit, setModalEdit] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
+  };
+
   const emptyReview = () => {
     setReviewId(0);
     setReviewDescription("");
@@ -37,7 +47,9 @@ const ReviewComponent = () => {
     };
     try {
       await axios.post(`${API_BASE_URL}reviews`, review);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -54,7 +66,9 @@ const ReviewComponent = () => {
     };
     try {
       await axios.post(`${API_BASE_URL}reviews/withOverallRating`, review);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -67,7 +81,9 @@ const ReviewComponent = () => {
     try {
       const response = await axios.get<Review[]>(`${API_BASE_URL}reviews`);
       setData(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -96,7 +112,9 @@ const ReviewComponent = () => {
     };
     try {
       await axios.patch(`${API_BASE_URL}reviews/${review.reviewId}`, review);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -116,7 +134,9 @@ const ReviewComponent = () => {
         `${API_BASE_URL}reviews/${review.reviewId}/withOverallRating`,
         review
       );
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -128,7 +148,9 @@ const ReviewComponent = () => {
   const handleDelete = async (review: Review) => {
     try {
       await axios.delete(`${API_BASE_URL}reviews/${review.reviewId}`);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
     fetchData();
@@ -180,7 +202,9 @@ const ReviewComponent = () => {
             {isModalEdit ? "Update" : "Insert"}
           </Button>
           <Button onClick={handleConfirmWithOverallRating} color="primary">
-            {isModalEdit ? "Update with overall rating" : "Insert with overall rating"}
+            {isModalEdit
+              ? "Update with overall rating"
+              : "Insert with overall rating"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -189,6 +213,19 @@ const ReviewComponent = () => {
         handleDelete={handleDelete}
         openDialogForEdit={openDialogForEdit}
       />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <strong>Error:</strong> {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

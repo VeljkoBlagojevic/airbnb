@@ -10,6 +10,8 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import RatingTableComponent from "./RatingTableComponent";
 import { ReactNode, useEffect, useState } from "react";
@@ -19,7 +21,6 @@ import { Rating } from "../../domain/Rating";
 import { ReviewCategory } from "../../domain/ReviewCategory";
 import { useParams } from "react-router";
 import { Review } from "../../domain/Review";
-import ReviewTableComponent from "./ReviewTableComponent";
 import ReviewCardComponent from "./ReviewCardComponent";
 
 const RatingComponent = () => {
@@ -45,13 +46,18 @@ const RatingComponent = () => {
   // false for saving inserting, true for updating
   const [isModalEdit, setModalEdit] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
   const fetchData = async () => {
     try {
       const response = await axios.get<Rating[]>(
         `${API_BASE_URL}ratings/review/${reviewId}`
       );
       setData(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -62,7 +68,9 @@ const RatingComponent = () => {
         `${API_BASE_URL}reviewCategories`
       );
       setCategories(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -73,7 +81,9 @@ const RatingComponent = () => {
         `${API_BASE_URL}reviews/${reviewId}`
       );
       setReview(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -100,7 +110,9 @@ const RatingComponent = () => {
     };
     try {
       await axios.post(`${API_BASE_URL}ratings`, rating);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -133,7 +145,9 @@ const RatingComponent = () => {
     };
     try {
       await axios.patch(`${API_BASE_URL}ratings`, rating);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -148,7 +162,9 @@ const RatingComponent = () => {
       await axios.delete(
         `${API_BASE_URL}ratings/review/${rating.ratingId.reviewId}/category/${rating.ratingId.reviewCategoryId}`
       );
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
     fetchData();
@@ -169,6 +185,11 @@ const RatingComponent = () => {
     if (chosenCategory) {
       setCategory(chosenCategory);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
   };
 
   return (
@@ -222,6 +243,19 @@ const RatingComponent = () => {
         openDialogForEdit={openDialogForEdit}
       />
       <ReviewCardComponent review={review} />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <strong>Error:</strong> {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

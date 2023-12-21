@@ -1,10 +1,12 @@
 import {
+  Alert,
   Button,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import PropertyCategoryTableComponent from "./PropertyCategoryTableComponent";
@@ -22,6 +24,14 @@ const PropertyCategoryComponent = () => {
   // false for saving inserting, true for updating
   const [isModalEdit, setModalEdit] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+    setErrorMessage("");
+  };
+
   const emptyPropertyCategory = () => {
     setPropertyCategoryId(0);
     setPropertyCategoryName("");
@@ -34,7 +44,9 @@ const PropertyCategoryComponent = () => {
     };
     try {
       await axios.post(`${API_BASE_URL}propertyCategories`, propertyCategory);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -49,7 +61,9 @@ const PropertyCategoryComponent = () => {
         `${API_BASE_URL}propertyCategories`
       );
       setData(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -79,7 +93,9 @@ const PropertyCategoryComponent = () => {
         `${API_BASE_URL}propertyCategories/${propertyCategory.propertyCategoryId}`,
         propertyCategory
       );
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     } finally {
       fetchData();
@@ -94,7 +110,9 @@ const PropertyCategoryComponent = () => {
         `${API_BASE_URL}propertyCategories/${propertyCategory.propertyCategoryId}`
       );
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.body.detail);
+      setOpenSnackbar(true);
       console.error("Error fetching data:", error);
     }
   };
@@ -143,6 +161,19 @@ const PropertyCategoryComponent = () => {
         handleDelete={handleDelete}
         openDialogForEdit={openDialogForEdit}
       />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <strong>Error:</strong> {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
